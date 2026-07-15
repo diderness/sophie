@@ -123,8 +123,9 @@ function parseBookedDates($ics) {
     return array_keys($dates);
 }
 
-// Frischen Cache direkt ausliefern
-if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTtl) {
+// Frischen Cache direkt ausliefern (per ?refresh=1 erzwingbar überspringen)
+$forceRefresh = isset($_GET['refresh']);
+if (!$forceRefresh && file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTtl) {
     $cached = readCache($cacheFile);
     if ($cached !== null) {
         respond($cached);

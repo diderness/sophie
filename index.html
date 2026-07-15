@@ -37,6 +37,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epunda+Slab:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/de.js"></script>
 
     <!-- SEO: Strukturierte Daten (JSON-LD) mit Location -->
     <script type="application/ld+json">
@@ -276,7 +279,7 @@
                         </div>
                         <div class="mb-6">
                              <label for="event-date" class="block text-stone-600 mb-2">Datum eures Anlasses</label>
-                             <input type="date" id="event-date" name="event-date" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors">
+                             <input type="text" id="event-date" name="event-date" placeholder="Datum auswählen" autocomplete="off" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors">
                         </div>
                         <div class="mb-6">
                             <label for="message" class="block text-stone-600 mb-2">Eure Nachricht</label>
@@ -441,9 +444,35 @@
             document.getElementById('faq-schema').textContent = JSON.stringify(faqSchema);
         }
 
+        // Zeigt im Datepicker belegte Tage aus Sophies Google-Kalender an
+        function initEventDatePicker() {
+            const commonOptions = {
+                locale: "de",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d.m.Y",
+                minDate: "today",
+                disableMobile: true
+            };
+
+            fetch('calendar-proxy.php')
+                .then(res => res.json())
+                .then(data => {
+                    flatpickr("#event-date", {
+                        ...commonOptions,
+                        disable: data.bookedDates || []
+                    });
+                })
+                .catch(() => {
+                    // Fällt bei Fehlern auf einen normalen Datepicker ohne Sperrungen zurück
+                    flatpickr("#event-date", commonOptions);
+                });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             populateContent();
             lucide.createIcons();
+            initEventDatePicker();
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

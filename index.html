@@ -257,7 +257,7 @@
                     <p class="text-stone-600 mb-12 max-w-2xl mx-auto">Ich freue mich darauf, von euch zu hören. Schreibt mir für ein unverbindliches Kennenlerngespräch.</p>
                 </div>
                 <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-                    <form action="https://formsubmit.co/5cfdb1ba4f3d272fb248ee2b144ce70f" method="POST">
+                    <form id="contact-form" action="https://formsubmit.co/5cfdb1ba4f3d272fb248ee2b144ce70f" method="POST">
                         <!-- NEU: Weiterleitung zur Danke-Seite -->
                         <input type="hidden" name="_next" value="https://trauredenbysophie.de/thanks.html">
                         <!-- Optional: Spamschutz verbessern -->
@@ -469,10 +469,34 @@
                 });
         }
 
+        // Legt bei einer Formularanfrage parallel einen vorläufigen Kalendereintrag an,
+        // ohne die eigentliche Übermittlung an FormSubmit.co zu blockieren
+        function initTentativeCalendarBooking() {
+            const form = document.getElementById('contact-form');
+            form.addEventListener('submit', () => {
+                const payload = {
+                    name: form.name.value,
+                    email: form.email.value,
+                    phone: form.phone.value,
+                    'event-date': form['event-date'].value,
+                    message: form.message.value
+                };
+                fetch('create-tentative-event.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    keepalive: true
+                }).catch(() => {
+                    // Fehler hier bewusst ignorieren - die eigentliche Anfrage per E-Mail geht trotzdem raus
+                });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             populateContent();
             lucide.createIcons();
             initEventDatePicker();
+            initTentativeCalendarBooking();
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

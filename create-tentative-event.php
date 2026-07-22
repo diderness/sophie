@@ -9,19 +9,9 @@ $calendarId = '70741a063095350b1d01c468a45559afe7d36ac49730ce26d402ebd2a8ccaad9@
 $serviceAccountFile = __DIR__ . '/secrets/trauredenbysophie-fafd5340cea0.json';
 $allowedOrigin = 'trauredenbysophie.de';
 
-// Temporärer Debug-Modus: per Browser aufrufbar, zeigt den echten Fehler an
-// statt der generischen ok:false-Antwort. Nach dem Debuggen wieder entfernen!
-$debugSecret = 'sophie-debug-2026';
-$debugMode = ($_GET['debug'] ?? '') === $debugSecret;
-
 function fail($message) {
-    global $debugMode;
     error_log('create-tentative-event: ' . $message);
-    if ($debugMode) {
-        echo json_encode(['ok' => false, 'debug_error' => $message]);
-    } else {
-        echo json_encode(['ok' => false]);
-    }
+    echo json_encode(['ok' => false]);
     exit;
 }
 
@@ -30,30 +20,22 @@ function ok() {
     exit;
 }
 
-if ($debugMode) {
-    $name = 'Test Person';
-    $email = 'test@example.com';
-    $phone = '0123456789';
-    $eventDate = (new DateTime('+7 days'))->format('Y-m-d');
-    $message = 'Dies ist ein Testeintrag über den Debug-Modus.';
-} else {
-    // Grobe Missbrauchsbremse: nur Anfragen mit passendem Referer akzeptieren
-    $referer = $_SERVER['HTTP_REFERER'] ?? '';
-    if ($referer !== '' && strpos($referer, $allowedOrigin) === false) {
-        fail('unexpected referer');
-    }
-
-    $input = json_decode(file_get_contents('php://input'), true);
-    if (!is_array($input)) {
-        fail('invalid payload');
-    }
-
-    $name = trim($input['name'] ?? '');
-    $email = trim($input['email'] ?? '');
-    $phone = trim($input['phone'] ?? '');
-    $eventDate = trim($input['event-date'] ?? '');
-    $message = trim($input['message'] ?? '');
+// Grobe Missbrauchsbremse: nur Anfragen mit passendem Referer akzeptieren
+$referer = $_SERVER['HTTP_REFERER'] ?? '';
+if ($referer !== '' && strpos($referer, $allowedOrigin) === false) {
+    fail('unexpected referer');
 }
+
+$input = json_decode(file_get_contents('php://input'), true);
+if (!is_array($input)) {
+    fail('invalid payload');
+}
+
+$name = trim($input['name'] ?? '');
+$email = trim($input['email'] ?? '');
+$phone = trim($input['phone'] ?? '');
+$eventDate = trim($input['event-date'] ?? '');
+$message = trim($input['message'] ?? '');
 
 if ($name === '' || $message === '') {
     fail('missing required fields');

@@ -37,9 +37,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Epunda+Slab:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/de.js"></script>
 
     <!-- SEO: Strukturierte Daten (JSON-LD) mit Location -->
     <script type="application/ld+json">
@@ -128,7 +125,7 @@
                     <a href="trauerreden.html" class="text-stone-600 hover:text-beige-dark transition duration-300">Trauerreden</a>
                     <!-- <a href="#testimonials" class="text-stone-600 hover:text-beige-dark transition duration-300">Stimmen</a> -->
                     <a href="#faq" class="text-stone-600 hover:text-beige-dark transition duration-300">FAQ</a>
-                    <a href="#contact" class="text-stone-600 hover:text-beige-dark transition duration-300">Kontakt</a>
+                    <a href="kontakt.html" class="text-stone-600 hover:text-beige-dark transition duration-300">Kontakt</a>
                 </nav>
                 <button id="mobile-menu-button" class="md:hidden">
                     <svg class="w-6 h-6 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -143,7 +140,7 @@
             <a href="trauerreden.html" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Trauerreden</a>
             <!-- <a href="#testimonials" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Stimmen</a> -->
             <a href="#faq" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">FAQ</a>
-            <a href="#contact" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Kontakt</a>
+            <a href="kontakt.html" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Kontakt</a>
         </div>
     </header>
 
@@ -157,7 +154,7 @@
                     <p id="hero-subtitle" class="text-sm font-semibold text-beige-dark tracking-widest uppercase mb-4"></p>
                     <h1 id="hero-title" class="text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-800 leading-tight mb-4"></h1>
                     <p id="hero-description" class="text-lg md:text-xl text-stone-600 max-w-lg mx-auto md:mx-0 mb-8"></p>
-                    <a href="#contact" class="bg-beige hover:bg-beige-dark text-stone-800 font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">lasst uns kennenlernen</a>
+                    <a href="kontakt.html" class="bg-beige hover:bg-beige-dark text-stone-800 font-semibold py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">lasst uns kennenlernen</a>
                     <!-- Trust Signals / Key Points -->
                     <div class="mt-12 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:space-x-8 text-xs sm:text-sm text-stone-500">
                         <div class="flex items-center gap-2">
@@ -251,51 +248,6 @@
                 </div>
                 <div id="faq-container" class="max-w-3xl mx-auto space-y-4">
                     <!-- FAQ Items werden hier per JS eingefügt -->
-                </div>
-            </div>
-        </section>
-
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-24 bg-white fade-in-section">
-            <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-semibold text-stone-800 mb-4">Erzählt mir eure Geschichte</h2>
-                    <p class="text-stone-600 mb-12 max-w-2xl mx-auto">Ich freue mich darauf, von euch zu hören. Schreibt mir für ein unverbindliches Kennenlerngespräch.</p>
-                </div>
-                <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-                    <form id="contact-form" action="https://formsubmit.co/5cfdb1ba4f3d272fb248ee2b144ce70f" method="POST">
-                        <!-- NEU: Weiterleitung zur Danke-Seite -->
-                        <input type="hidden" name="_next" value="https://trauredenbysophie.de/thanks.html">
-                        <!-- Optional: Spamschutz verbessern -->
-                        <input type="hidden" name="_captcha" value="false">
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label for="name" class="block text-stone-600 mb-2">Name</label>
-                                <input type="text" id="name" name="name" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors" required>
-                            </div>
-                            <div>
-                                <label for="email" class="block text-stone-600 mb-2">E-Mail</label>
-                                <input type="email" id="email" name="email" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors" required>
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <label for="phone" class="block text-stone-600 mb-2">Telefonnummer</label>
-                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors" required>
-                        </div>
-                        <div class="mb-6">
-                             <label for="event-date" class="block text-stone-600 mb-2">Datum eures Anlasses</label>
-                             <input type="text" id="event-date" name="event-date" placeholder="Datum auswählen" autocomplete="off" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors">
-                        </div>
-                        <div class="mb-6">
-                            <label for="message" class="block text-stone-600 mb-2">Eure Nachricht</label>
-                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 bg-gray-50 border-b-2 border-beige rounded-t-lg focus:outline-none focus:border-beige-dark transition-colors" required></textarea>
-                        </div>
-                        <div class="text-center">
-                            <button id="submit-btn" type="submit" class="bg-beige hover:bg-beige-dark text-stone-800 font-semibold py-3 px-10 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Nachricht senden</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </section>
@@ -452,59 +404,9 @@
             document.getElementById('faq-schema').textContent = JSON.stringify(faqSchema);
         }
 
-        // Zeigt im Datepicker belegte Tage aus Sophies Google-Kalender an
-        function initEventDatePicker() {
-            const commonOptions = {
-                locale: "de",
-                dateFormat: "Y-m-d",
-                altInput: true,
-                altFormat: "d.m.Y",
-                minDate: "today",
-                disableMobile: true
-            };
-
-            fetch('calendar-proxy.php')
-                .then(res => res.json())
-                .then(data => {
-                    flatpickr("#event-date", {
-                        ...commonOptions,
-                        disable: data.bookedDates || []
-                    });
-                })
-                .catch(() => {
-                    // Fällt bei Fehlern auf einen normalen Datepicker ohne Sperrungen zurück
-                    flatpickr("#event-date", commonOptions);
-                });
-        }
-
-        // Legt bei einer Formularanfrage parallel einen vorläufigen Kalendereintrag an,
-        // ohne die eigentliche Übermittlung an FormSubmit.co zu blockieren
-        function initTentativeCalendarBooking() {
-            const form = document.getElementById('contact-form');
-            form.addEventListener('submit', () => {
-                const payload = {
-                    name: form.name.value,
-                    email: form.email.value,
-                    phone: form.phone.value,
-                    'event-date': form['event-date'].value,
-                    message: form.message.value
-                };
-                fetch('create-tentative-event.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                    keepalive: true
-                }).catch(() => {
-                    // Fehler hier bewusst ignorieren - die eigentliche Anfrage per E-Mail geht trotzdem raus
-                });
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             populateContent();
             lucide.createIcons();
-            initEventDatePicker();
-            initTentativeCalendarBooking();
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

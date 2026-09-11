@@ -288,7 +288,7 @@
         const siteContent = {
             hero: {
                 subtitle: "Freie Rednerin mit Herz",
-                title: "Moin! Wie schön, dass ihr hier seid!",
+                title: "Moin!<br class=\"md:hidden\"> Wie schön, dass ihr hier seid!",
                 description: "Ich finde Worte für das, was ihr fühlt - echt, herzlich und mit einem Lächeln erzählt. Eure Liebe, eure Geschichte - lebendig, leicht und einfach von Herzen. Trauungen, die sich anch euch anfühlen - mit Herz, Humor und ganz viel Gefühl."
             },
             about: {
@@ -342,7 +342,7 @@
         function populateContent() {
             const content = siteContent;
             document.getElementById('hero-subtitle').textContent = content.hero.subtitle;
-            document.getElementById('hero-title').textContent = content.hero.title;
+            document.getElementById('hero-title').innerHTML = content.hero.title;
             // Diese Zeile wurde geändert, um HTML (Zeilenumbrüche) zu rendern
             document.getElementById('hero-description').innerHTML = content.hero.description;
             document.getElementById('about-title').textContent = content.about.title;

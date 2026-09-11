@@ -125,6 +125,7 @@
                     <a href="#about" class="text-stone-600 hover:text-beige-dark transition duration-300">Über Mich</a>
                     <a href="#services" class="text-stone-600 hover:text-beige-dark transition duration-300">Leistungen</a>
                     <a href="#process" class="text-stone-600 hover:text-beige-dark transition duration-300">Ablauf</a>
+                    <a href="trauerreden.html" class="text-stone-600 hover:text-beige-dark transition duration-300">Trauerreden</a>
                     <!-- <a href="#testimonials" class="text-stone-600 hover:text-beige-dark transition duration-300">Stimmen</a> -->
                     <a href="#faq" class="text-stone-600 hover:text-beige-dark transition duration-300">FAQ</a>
                     <a href="#contact" class="text-stone-600 hover:text-beige-dark transition duration-300">Kontakt</a>
@@ -139,6 +140,7 @@
             <a href="#about" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Über Mich</a>
             <a href="#services" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Leistungen</a>
             <a href="#process" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Ablauf</a>
+            <a href="trauerreden.html" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Trauerreden</a>
             <!-- <a href="#testimonials" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Stimmen</a> -->
             <a href="#faq" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">FAQ</a>
             <a href="#contact" class="block py-2 px-6 text-sm text-stone-600 hover:bg-beige transition duration-300">Kontakt</a>
@@ -334,7 +336,7 @@
                     { icon: "gem", title: "Freie Trauung", text: "Eine Zeremonie, die eure Persönlichkeit widerspiegelt. Frei von Konventionen, voller Emotionen und ganz auf euch zugeschnitten." },
                     { icon: "heart-handshake", title: "Eheversprechen-Erneuerung", text: "Feiert eure Liebe und die gemeinsamen Jahre mit einer berührenden Erneuerung eures Versprechens. Ein zweites \"Ja\" voller Bedeutung." },
                     { icon: "baby", title: "Willkommensfest", text: "Begrüßt euren kleinen Schatz mit einer liebevollen, nicht-religiösen Zeremonie im Kreise eurer Familie und Freunde." },
-                    { icon: "leaf", title: "Trauerrede", text: "In Zeiten des Abschieds spende ich Trost mit einfühlsamen Worten, die das Leben eines geliebten Menschen würdigen." }
+                    { icon: "leaf", title: "Trauerrede", text: "In Zeiten des Abschieds spende ich Trost mit einfühlsamen Worten, die das Leben eines geliebten Menschen würdigen.", link: "trauerreden.html" }
                 ]
             },
             process: {
@@ -388,6 +390,7 @@
                     </div>
                     <h3 class="text-xl md:text-2xl font-semibold text-stone-700 mb-4">${service.title}</h3>
                     <p class="text-stone-600">${service.text}</p>
+                    ${service.link ? `<a href="${service.link}" class="text-beige-dark font-semibold mt-4 inline-block hover:underline">Mehr erfahren →</a>` : ''}
                 </div>
             `).join('');
             document.getElementById('process-title').textContent = content.process.title;

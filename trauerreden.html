@@ -54,20 +54,22 @@
 
     <style>
         :root {
+            --color-bg: #FDFBF8;
+            --color-bg-light: #F5F1ED;
             --color-accent-dark: #8D7B68;
             --color-accent: #E8DFD8;
             --color-accent-hover: #D4C4B7;
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
+            background-color: var(--color-bg);
             overflow-x: hidden;
         }
         h1, h2, h3, .font-serif {
             font-family: 'Epunda Slab', serif;
         }
         .bg-beige-light {
-             background-color: #F5F1ED;
+             background-color: var(--color-bg-light);
         }
         .bg-beige {
              background-color: var(--color-accent);
@@ -123,10 +125,27 @@
                 <span class="text-xs text-stone-600">Bernstein</span>
             </button>
         </div>
-        <label class="flex items-center justify-between gap-2 text-stone-600 mb-2">
-            <span class="text-xs">Eigene Farbe</span>
+        <label class="flex items-center justify-between gap-2 text-stone-600 mb-3">
+            <span class="text-xs">Preset für alle 3 Akzente</span>
             <input type="color" id="custom-color-picker" value="#8D7B68" class="w-8 h-8 p-0 border-0 rounded cursor-pointer">
         </label>
+
+        <hr class="border-gray-200 mb-3">
+
+        <p class="font-semibold text-stone-700 mb-2 text-xs">Einzelnes Element ändern</p>
+        <label class="block text-xs text-stone-600 mb-1" for="element-select">Element</label>
+        <select id="element-select" class="w-full mb-2 text-xs border border-gray-300 rounded px-2 py-1.5">
+            <option value="--color-bg">Hintergrund (Creme)</option>
+            <option value="--color-bg-light">Beige hell (Abschnitte)</option>
+            <option value="--color-accent">Beige mittel (Buttons)</option>
+            <option value="--color-accent-dark">Beige dunkel (Text)</option>
+            <option value="--color-accent-hover">Beige Hover</option>
+        </select>
+        <div class="flex items-center gap-2 mb-2">
+            <input type="color" id="element-color-picker" value="#8D7B68" class="w-8 h-8 p-0 border-0 rounded cursor-pointer">
+            <button type="button" id="confirm-element-color-btn" class="flex-1 text-xs bg-stone-700 text-white rounded px-2 py-1.5 hover:bg-stone-800 transition-colors">Bestätigen</button>
+        </div>
+
         <button type="button" id="reset-color-btn" class="text-xs text-stone-500 underline hover:text-stone-700">Zurücksetzen (Original-Beige)</button>
     </div>
 
@@ -365,6 +384,13 @@
     <script>
         // TEST-WERKZEUG: Farbauswahl - vor Livegang entfernen
         const ORIGINAL_ACCENT_COLORS = { dark: '#8D7B68', accent: '#E8DFD8', hover: '#D4C4B7' };
+        const ORIGINAL_ELEMENT_COLORS = {
+            '--color-bg': '#FDFBF8',
+            '--color-bg-light': '#F5F1ED',
+            '--color-accent': '#E8DFD8',
+            '--color-accent-dark': '#8D7B68',
+            '--color-accent-hover': '#D4C4B7'
+        };
         const ACCENT_PRESETS = {
             sage: { dark: '#6F8067', accent: '#D9E1D4', hover: '#C3D0BC' },
             lavender: { dark: '#6E7A99', accent: '#DCE0EC', hover: '#C5CBE0' },
@@ -418,6 +444,11 @@
             };
         }
 
+        function currentValueOf(cssVarName) {
+            const value = getComputedStyle(document.documentElement).getPropertyValue(cssVarName).trim();
+            return value || ORIGINAL_ELEMENT_COLORS[cssVarName];
+        }
+
         function initColorTester() {
             document.querySelectorAll('.color-preset-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -427,9 +458,26 @@
             document.getElementById('custom-color-picker').addEventListener('input', (e) => {
                 applyAccentColors(accentColorsFromCustom(e.target.value));
             });
+
+            // Einzelnes Element auswählen -> Picker zeigt aktuelle Farbe -> Bestätigen wendet sie an
+            const elementSelect = document.getElementById('element-select');
+            const elementColorPicker = document.getElementById('element-color-picker');
+            const syncElementPickerToSelection = () => {
+                elementColorPicker.value = currentValueOf(elementSelect.value);
+            };
+            elementSelect.addEventListener('change', syncElementPickerToSelection);
+            syncElementPickerToSelection();
+
+            document.getElementById('confirm-element-color-btn').addEventListener('click', () => {
+                document.documentElement.style.setProperty(elementSelect.value, elementColorPicker.value);
+            });
+
             document.getElementById('reset-color-btn').addEventListener('click', () => {
                 applyAccentColors(ORIGINAL_ACCENT_COLORS);
+                document.documentElement.style.setProperty('--color-bg', ORIGINAL_ELEMENT_COLORS['--color-bg']);
+                document.documentElement.style.setProperty('--color-bg-light', ORIGINAL_ELEMENT_COLORS['--color-bg-light']);
                 document.getElementById('custom-color-picker').value = ORIGINAL_ACCENT_COLORS.dark;
+                syncElementPickerToSelection();
             });
         }
 

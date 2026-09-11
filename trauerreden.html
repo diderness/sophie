@@ -107,7 +107,9 @@
     <!-- TEST-WERKZEUG: Farbauswahl für die Trauerreden-Seite (nur zum Ausprobieren, vor Livegang entfernen) -->
     <div id="color-tester" class="fixed top-24 right-4 z-[60] bg-white/95 backdrop-blur-md shadow-lg rounded-lg p-4 w-56 text-sm border border-gray-200">
         <p class="font-semibold text-stone-700 mb-3">🎨 Testfarbe</p>
-        <div class="grid grid-cols-2 gap-2 mb-3">
+
+        <p class="text-xs text-stone-600 mb-2">Preset (setzt alle 5 Farben)</p>
+        <div class="grid grid-cols-2 gap-2 mb-4">
             <button type="button" data-preset="sage" class="color-preset-btn flex items-center gap-2 px-2 py-1.5 rounded border border-gray-200 hover:border-stone-400 transition-colors">
                 <span class="w-4 h-4 rounded-full flex-shrink-0" style="background-color:#6F8067"></span>
                 <span class="text-xs text-stone-600">Salbeigrün</span>
@@ -125,10 +127,6 @@
                 <span class="text-xs text-stone-600">Bernstein</span>
             </button>
         </div>
-        <label class="flex items-center justify-between gap-2 text-stone-600 mb-3">
-            <span class="text-xs">Preset für alle 3 Akzente</span>
-            <input type="color" id="custom-color-picker" value="#8D7B68" class="w-8 h-8 p-0 border-0 rounded cursor-pointer">
-        </label>
 
         <hr class="border-gray-200 mb-3">
 
@@ -383,7 +381,6 @@
 
     <script>
         // TEST-WERKZEUG: Farbauswahl - vor Livegang entfernen
-        const ORIGINAL_ACCENT_COLORS = { dark: '#8D7B68', accent: '#E8DFD8', hover: '#D4C4B7' };
         const ORIGINAL_ELEMENT_COLORS = {
             '--color-bg': '#FDFBF8',
             '--color-bg-light': '#F5F1ED',
@@ -391,18 +388,22 @@
             '--color-accent-dark': '#8D7B68',
             '--color-accent-hover': '#D4C4B7'
         };
+        // Presets geben nur den dunklen Ankerton vor - die restlichen 4 Farben
+        // werden daraus abgeleitet (gleiche Logik wie beim freien Farbpicker)
         const ACCENT_PRESETS = {
-            sage: { dark: '#6F8067', accent: '#D9E1D4', hover: '#C3D0BC' },
-            lavender: { dark: '#6E7A99', accent: '#DCE0EC', hover: '#C5CBE0' },
-            bordeaux: { dark: '#8B4A4A', accent: '#EAD3D3', hover: '#D9B3B3' },
-            amber: { dark: '#A0793A', accent: '#F0E0C0', hover: '#E3CB98' }
+            sage: '#6F8067',
+            lavender: '#6E7A99',
+            bordeaux: '#8B4A4A',
+            amber: '#A0793A'
         };
 
-        function applyAccentColors({ dark, accent, hover }) {
+        function applyFullPalette({ dark, accent, hover, bgLight, bg }) {
             const root = document.documentElement.style;
             root.setProperty('--color-accent-dark', dark);
             root.setProperty('--color-accent', accent);
             root.setProperty('--color-accent-hover', hover);
+            root.setProperty('--color-bg-light', bgLight);
+            root.setProperty('--color-bg', bg);
         }
 
         function hexToHsl(hex) {
@@ -435,12 +436,15 @@
             return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
         }
 
-        function accentColorsFromCustom(baseHex) {
+        function deriveFullPalette(baseHex) {
             const [h, s] = hexToHsl(baseHex);
+            const sat = Math.max(s, 20);
             return {
                 dark: baseHex,
-                accent: hslToHex(h, Math.max(s, 20), 88),
-                hover: hslToHex(h, Math.max(s, 20), 78)
+                accent: hslToHex(h, sat, 85),
+                hover: hslToHex(h, sat, 75),
+                bgLight: hslToHex(h, Math.max(sat - 5, 8), 95),
+                bg: hslToHex(h, Math.max(sat - 8, 5), 98)
             };
         }
 
@@ -450,21 +454,20 @@
         }
 
         function initColorTester() {
-            document.querySelectorAll('.color-preset-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    applyAccentColors(ACCENT_PRESETS[btn.dataset.preset]);
-                });
-            });
-            document.getElementById('custom-color-picker').addEventListener('input', (e) => {
-                applyAccentColors(accentColorsFromCustom(e.target.value));
-            });
-
-            // Einzelnes Element auswählen -> Picker zeigt aktuelle Farbe -> Bestätigen wendet sie an
             const elementSelect = document.getElementById('element-select');
             const elementColorPicker = document.getElementById('element-color-picker');
             const syncElementPickerToSelection = () => {
                 elementColorPicker.value = currentValueOf(elementSelect.value);
             };
+
+            document.querySelectorAll('.color-preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    applyFullPalette(deriveFullPalette(ACCENT_PRESETS[btn.dataset.preset]));
+                    syncElementPickerToSelection();
+                });
+            });
+
+            // Einzelnes Element auswählen -> Picker zeigt aktuelle Farbe -> Bestätigen wendet sie an
             elementSelect.addEventListener('change', syncElementPickerToSelection);
             syncElementPickerToSelection();
 
@@ -473,10 +476,9 @@
             });
 
             document.getElementById('reset-color-btn').addEventListener('click', () => {
-                applyAccentColors(ORIGINAL_ACCENT_COLORS);
-                document.documentElement.style.setProperty('--color-bg', ORIGINAL_ELEMENT_COLORS['--color-bg']);
-                document.documentElement.style.setProperty('--color-bg-light', ORIGINAL_ELEMENT_COLORS['--color-bg-light']);
-                document.getElementById('custom-color-picker').value = ORIGINAL_ACCENT_COLORS.dark;
+                Object.entries(ORIGINAL_ELEMENT_COLORS).forEach(([name, value]) => {
+                    document.documentElement.style.setProperty(name, value);
+                });
                 syncElementPickerToSelection();
             });
         }

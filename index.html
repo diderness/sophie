@@ -109,6 +109,23 @@
             overflow: hidden;
             transition: max-height 0.5s ease-in-out;
         }
+        /* About-Me-Layout: Überschrift zuerst auf Mobil, neben dem Bild auf Desktop */
+        .about-grid {
+            display: grid;
+            grid-template-areas: "title" "image" "text";
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .about-grid .about-image { grid-area: image; }
+        .about-grid .about-title { grid-area: title; }
+        .about-grid .about-text { grid-area: text; }
+        @media (min-width: 768px) {
+            .about-grid {
+                grid-template-columns: 2fr 3fr;
+                grid-template-areas: "image title" "image text";
+                gap: 4rem;
+            }
+        }
     </style>
 </head>
 <body class="text-stone-700">
@@ -183,14 +200,14 @@
         <!-- About Me Section -->
         <section id="about" class="py-24 bg-beige-light fade-in-section">
             <div class="container mx-auto px-6">
-                <h2 id="about-title" class="text-3xl md:text-4xl font-semibold text-stone-800 mb-12 text-center"></h2>
-                <div class="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16">
-                    <div class="md:w-2/5 flex justify-center flex-shrink-0">
+                <div class="about-grid max-w-5xl mx-auto text-center md:text-left">
+                    <h2 id="about-title" class="about-title text-3xl md:text-4xl font-semibold text-stone-800 text-center md:text-left"></h2>
+                    <div class="about-image flex justify-center flex-shrink-0">
                         <div class="relative w-64 h-80 sm:w-72 sm:h-96 rounded-lg shadow-2xl overflow-hidden">
                             <img src="pics/portrait_sophie.jpeg" alt="Sophie bei einer Traurede" class="absolute w-full h-full object-cover">
                         </div>
                     </div>
-                    <div class="md:w-3/5 text-center md:text-left">
+                    <div class="about-text">
                         <p id="about-p1" class="text-stone-600 mb-4 leading-relaxed"></p>
                         <p id="about-p2" class="text-stone-600 leading-relaxed"></p>
                     </div>

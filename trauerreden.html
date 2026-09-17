@@ -138,25 +138,49 @@
     <main class="pt-20">
         <!-- TEST-WERKZEUG: Farbauswahl für diese Seite (nur zum Ausprobieren, vor Livegang entfernen) -->
         <section id="color-tester" class="w-full bg-stone-800 text-white">
-            <div class="container mx-auto px-6 py-3 flex flex-wrap items-center justify-center gap-3">
-                <span class="font-semibold text-sm mr-1">🎨 Testfarbe:</span>
-                <button type="button" data-preset="sage" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
-                    <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6F8067"></span>
-                    <span class="text-xs">Salbeigrün</span>
-                </button>
-                <button type="button" data-preset="lavender" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
-                    <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6E7A99"></span>
-                    <span class="text-xs">Lavendelblau</span>
-                </button>
-                <button type="button" data-preset="bordeaux" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
-                    <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#8B4A4A"></span>
-                    <span class="text-xs">Bordeaux</span>
-                </button>
-                <button type="button" data-preset="amber" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
-                    <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#A0793A"></span>
-                    <span class="text-xs">Bernstein</span>
-                </button>
-                <button type="button" id="reset-color-btn" class="text-xs underline text-white/80 hover:text-white ml-2">Zurücksetzen</button>
+            <div class="container mx-auto px-6 py-3">
+                <div class="flex flex-wrap items-center justify-center gap-3 mb-3">
+                    <span class="font-semibold text-sm mr-1">🎨 Presets:</span>
+                    <button type="button" data-preset="sage" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6F8067"></span>
+                        <span class="text-xs">Salbeigrün</span>
+                    </button>
+                    <button type="button" data-preset="lavender" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6E7A99"></span>
+                        <span class="text-xs">Lavendelblau</span>
+                    </button>
+                    <button type="button" data-preset="bordeaux" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#8B4A4A"></span>
+                        <span class="text-xs">Bordeaux</span>
+                    </button>
+                    <button type="button" data-preset="amber" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                        <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#A0793A"></span>
+                        <span class="text-xs">Bernstein</span>
+                    </button>
+                    <button type="button" id="reset-color-btn" class="text-xs underline text-white/80 hover:text-white ml-2">Zurücksetzen</button>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-3 border-t border-white/10">
+                    <label class="flex items-center gap-2 text-xs">
+                        Hintergrund
+                        <input type="color" class="element-color-input w-7 h-7 p-0 border-0 rounded cursor-pointer" data-css-var="--color-bg" value="#FDFBF8">
+                    </label>
+                    <label class="flex items-center gap-2 text-xs">
+                        Beige hell
+                        <input type="color" class="element-color-input w-7 h-7 p-0 border-0 rounded cursor-pointer" data-css-var="--color-bg-light" value="#F5F1ED">
+                    </label>
+                    <label class="flex items-center gap-2 text-xs">
+                        Beige mittel
+                        <input type="color" class="element-color-input w-7 h-7 p-0 border-0 rounded cursor-pointer" data-css-var="--color-accent" value="#E8DFD8">
+                    </label>
+                    <label class="flex items-center gap-2 text-xs">
+                        Beige dunkel
+                        <input type="color" class="element-color-input w-7 h-7 p-0 border-0 rounded cursor-pointer" data-css-var="--color-accent-dark" value="#8D7B68">
+                    </label>
+                    <label class="flex items-center gap-2 text-xs">
+                        Beige Hover
+                        <input type="color" class="element-color-input w-7 h-7 p-0 border-0 rounded cursor-pointer" data-css-var="--color-accent-hover" value="#D4C4B7">
+                    </label>
+                </div>
             </div>
         </section>
 
@@ -431,15 +455,33 @@
         }
 
         function initColorTester() {
+            const elementInputs = document.querySelectorAll('.element-color-input');
+
             document.querySelectorAll('.color-preset-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    applyFullPalette(deriveFullPalette(ACCENT_PRESETS[btn.dataset.preset]));
+                    const palette = deriveFullPalette(ACCENT_PRESETS[btn.dataset.preset]);
+                    applyFullPalette(palette);
+                    elementInputs.forEach(input => {
+                        const varName = input.dataset.cssVar;
+                        const key = { '--color-bg': 'bg', '--color-bg-light': 'bgLight', '--color-accent': 'accent', '--color-accent-dark': 'dark', '--color-accent-hover': 'hover' }[varName];
+                        input.value = palette[key];
+                    });
+                });
+            });
+
+            // Jeder Picker ändert live nur seine eigene Farbrolle
+            elementInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    document.documentElement.style.setProperty(input.dataset.cssVar, input.value);
                 });
             });
 
             document.getElementById('reset-color-btn').addEventListener('click', () => {
                 Object.entries(ORIGINAL_ELEMENT_COLORS).forEach(([name, value]) => {
                     document.documentElement.style.setProperty(name, value);
+                });
+                elementInputs.forEach(input => {
+                    input.value = ORIGINAL_ELEMENT_COLORS[input.dataset.cssVar];
                 });
             });
         }

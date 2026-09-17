@@ -126,6 +126,41 @@
                 gap: 4rem;
             }
         }
+        /* Audio-Player im Beige-Design */
+        .audio-progress-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: #E8DFD8;
+            cursor: pointer;
+        }
+        .audio-progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #8D7B68;
+            cursor: pointer;
+            border: 2px solid #FDFBF8;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .audio-progress-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #8D7B68;
+            cursor: pointer;
+            border: 2px solid #FDFBF8;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .audio-progress-slider::-moz-range-track {
+            height: 6px;
+            border-radius: 999px;
+            background: #E8DFD8;
+        }
     </style>
 </head>
 <body class="text-stone-700">
@@ -210,9 +245,22 @@
                     <div class="about-text">
                         <p id="about-p1" class="text-stone-600 mb-4 leading-relaxed"></p>
                         <p id="about-p2" class="text-stone-600 leading-relaxed mb-6"></p>
-                        <div class="bg-white rounded-lg shadow-md p-4">
-                            <p class="text-sm font-semibold text-stone-700 mb-2">Hört selbst: Sophie stellt sich vor</p>
-                            <audio controls class="w-full" preload="none">
+                        <div class="bg-white rounded-lg shadow-md p-4 md:p-5">
+                            <p class="text-sm font-semibold text-stone-700 mb-3">Hört selbst: Sophie stellt sich vor</p>
+                            <div class="flex items-center gap-4">
+                                <button type="button" id="audio-play-btn" aria-label="Abspielen" class="w-12 h-12 flex-shrink-0 bg-beige hover:bg-beige-dark text-stone-800 rounded-full flex items-center justify-center transition-colors">
+                                    <i data-lucide="play" id="audio-play-icon" class="w-5 h-5 ml-0.5"></i>
+                                    <i data-lucide="pause" id="audio-pause-icon" class="w-5 h-5 hidden"></i>
+                                </button>
+                                <div class="flex-1">
+                                    <input type="range" id="audio-progress" value="0" min="0" max="100" step="0.1" class="audio-progress-slider w-full">
+                                    <div class="flex justify-between text-xs text-stone-500 mt-1">
+                                        <span id="audio-current-time">0:00</span>
+                                        <span id="audio-duration">0:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <audio id="about-audio" preload="metadata" class="hidden">
                                 <source src="audio/sophie_uber_mich.m4a" type="audio/mp4">
                                 Euer Browser unterstützt die Audio-Wiedergabe leider nicht.
                             </audio>
@@ -427,9 +475,61 @@
             document.getElementById('faq-schema').textContent = JSON.stringify(faqSchema);
         }
 
+        function formatTime(seconds) {
+            if (!isFinite(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function initAboutAudioPlayer() {
+            const audio = document.getElementById('about-audio');
+            const playBtn = document.getElementById('audio-play-btn');
+            const playIcon = document.getElementById('audio-play-icon');
+            const pauseIcon = document.getElementById('audio-pause-icon');
+            const progress = document.getElementById('audio-progress');
+            const currentTimeEl = document.getElementById('audio-current-time');
+            const durationEl = document.getElementById('audio-duration');
+            if (!audio || !playBtn) return;
+
+            playBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                playBtn.setAttribute('aria-label', 'Pausieren');
+            });
+            audio.addEventListener('pause', () => {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+                playBtn.setAttribute('aria-label', 'Abspielen');
+            });
+            audio.addEventListener('ended', () => {
+                progress.value = 0;
+            });
+            audio.addEventListener('loadedmetadata', () => {
+                progress.max = audio.duration;
+                durationEl.textContent = formatTime(audio.duration);
+            });
+            audio.addEventListener('timeupdate', () => {
+                progress.value = audio.currentTime;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            });
+            progress.addEventListener('input', () => {
+                audio.currentTime = progress.value;
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             populateContent();
             lucide.createIcons();
+            initAboutAudioPlayer();
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

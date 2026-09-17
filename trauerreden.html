@@ -105,31 +105,31 @@
 <body class="text-stone-700">
 
     <!-- TEST-WERKZEUG: Farbauswahl für die Trauerreden-Seite (nur zum Ausprobieren, vor Livegang entfernen) -->
-    <div id="color-tester" class="fixed top-24 right-4 z-[60] bg-white/95 backdrop-blur-md shadow-lg rounded-lg p-4 w-56 text-sm border border-gray-200">
-        <p class="font-semibold text-stone-700 mb-3">🎨 Testfarbe</p>
-        <div class="grid grid-cols-2 gap-2 mb-3">
-            <button type="button" data-preset="sage" class="color-preset-btn flex items-center gap-2 px-2 py-1.5 rounded border border-gray-200 hover:border-stone-400 transition-colors">
-                <span class="w-4 h-4 rounded-full flex-shrink-0" style="background-color:#6F8067"></span>
-                <span class="text-xs text-stone-600">Salbeigrün</span>
+    <div id="color-tester" class="fixed top-0 left-0 w-full z-[60] bg-stone-800 text-white">
+        <div class="container mx-auto px-6 py-2 flex flex-wrap items-center justify-center gap-3">
+            <span class="font-semibold text-sm mr-1">🎨 Testfarbe:</span>
+            <button type="button" data-preset="sage" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6F8067"></span>
+                <span class="text-xs">Salbeigrün</span>
             </button>
-            <button type="button" data-preset="lavender" class="color-preset-btn flex items-center gap-2 px-2 py-1.5 rounded border border-gray-200 hover:border-stone-400 transition-colors">
-                <span class="w-4 h-4 rounded-full flex-shrink-0" style="background-color:#6E7A99"></span>
-                <span class="text-xs text-stone-600">Lavendelblau</span>
+            <button type="button" data-preset="lavender" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#6E7A99"></span>
+                <span class="text-xs">Lavendelblau</span>
             </button>
-            <button type="button" data-preset="bordeaux" class="color-preset-btn flex items-center gap-2 px-2 py-1.5 rounded border border-gray-200 hover:border-stone-400 transition-colors">
-                <span class="w-4 h-4 rounded-full flex-shrink-0" style="background-color:#8B4A4A"></span>
-                <span class="text-xs text-stone-600">Bordeaux</span>
+            <button type="button" data-preset="bordeaux" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#8B4A4A"></span>
+                <span class="text-xs">Bordeaux</span>
             </button>
-            <button type="button" data-preset="amber" class="color-preset-btn flex items-center gap-2 px-2 py-1.5 rounded border border-gray-200 hover:border-stone-400 transition-colors">
-                <span class="w-4 h-4 rounded-full flex-shrink-0" style="background-color:#A0793A"></span>
-                <span class="text-xs text-stone-600">Bernstein</span>
+            <button type="button" data-preset="amber" class="color-preset-btn flex items-center gap-2 px-2 py-1 rounded border border-white/20 hover:border-white/60 transition-colors">
+                <span class="w-3.5 h-3.5 rounded-full flex-shrink-0" style="background-color:#A0793A"></span>
+                <span class="text-xs">Bernstein</span>
             </button>
+            <button type="button" id="reset-color-btn" class="text-xs underline text-white/80 hover:text-white ml-2">Zurücksetzen</button>
         </div>
-        <button type="button" id="reset-color-btn" class="text-xs text-stone-500 underline hover:text-stone-700">Zurücksetzen (Original-Beige)</button>
     </div>
 
     <!-- Header & Navigation -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-300">
+    <header class="fixed top-10 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm transition-all duration-300">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <a href="index.html" class="text-2xl font-semibold text-beige-dark font-serif">Traureden by Sophie</a>
@@ -158,7 +158,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="pt-20">
+    <main class="pt-32">
         <!-- Hero Section -->
         <section id="hero" class="relative w-full min-h-[80vh] flex items-center bg-white py-16">
             <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">

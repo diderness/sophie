@@ -1,0 +1,36 @@
+name: Deploy auf Strato (FTP)
+
+# Lädt die Website bei jedem Push auf main per FTPS auf den Strato-Webspace.
+# Zugangsdaten kommen aus den Repo-Secrets FTP_SERVER, FTP_USERNAME, FTP_PASSWORD.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ftp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Die Action merkt sich in .ftp-deploy-sync-state.json auf dem Server, was sie
+      # hochgeladen hat, und löscht nur eigene Dateien. Dateien, die nur auf dem
+      # Server liegen (Geschenkseite, secrets/*.json, cache/*.json), bleiben unberührt.
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            secrets/*.json
+            cache/*.json
+            g-fqsscyn21amkybc5/**

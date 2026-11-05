@@ -454,7 +454,12 @@
                 label.title = 'Hexcode kopieren';
                 label.className = 'font-mono text-[11px] text-white/80 hover:text-white tracking-wide';
                 label.addEventListener('click', () => {
-                    if (navigator.clipboard) navigator.clipboard.writeText(label.textContent);
+                    if (!navigator.clipboard) return;
+                    const hex = label.textContent;
+                    navigator.clipboard.writeText(hex).then(() => {
+                        label.textContent = 'kopiert ✓';
+                        setTimeout(() => { label.textContent = hex; }, 1200);
+                    });
                 });
                 input.insertAdjacentElement('afterend', label);
                 hexLabels[input.dataset.cssVar] = label;

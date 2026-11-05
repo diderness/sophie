@@ -446,6 +446,24 @@
         function initColorTester() {
             const elementInputs = document.querySelectorAll('.element-color-input');
 
+            // Unter jedem Picker den aktuellen Hexcode anzeigen (Klick kopiert ihn)
+            const hexLabels = {};
+            elementInputs.forEach(input => {
+                const label = document.createElement('button');
+                label.type = 'button';
+                label.title = 'Hexcode kopieren';
+                label.className = 'font-mono text-[11px] text-white/80 hover:text-white tracking-wide';
+                label.addEventListener('click', () => {
+                    if (navigator.clipboard) navigator.clipboard.writeText(label.textContent);
+                });
+                input.insertAdjacentElement('afterend', label);
+                hexLabels[input.dataset.cssVar] = label;
+            });
+            const updateHexLabel = input => {
+                hexLabels[input.dataset.cssVar].textContent = input.value.toUpperCase();
+            };
+            elementInputs.forEach(updateHexLabel);
+
             // Für jede Farbrolle eigene kleine Preset-Swatches erzeugen,
             // abgeleitet aus den 4 Ankerfarben - jeder Swatch setzt nur diese eine Rolle
             document.querySelectorAll('.element-presets').forEach(container => {
@@ -455,13 +473,13 @@
                     const palette = deriveFullPalette(baseHex);
                     const swatch = document.createElement('button');
                     swatch.type = 'button';
-                    swatch.title = PRESET_LABELS[presetName];
+                    swatch.title = `${PRESET_LABELS[presetName]} ${palette[key].toUpperCase()}`;
                     swatch.className = 'w-4 h-4 rounded-full border border-white/30 flex-shrink-0';
                     swatch.style.backgroundColor = palette[key];
                     swatch.addEventListener('click', () => {
                         document.documentElement.style.setProperty(varName, palette[key]);
                         const input = document.querySelector(`.element-color-input[data-css-var="${varName}"]`);
-                        if (input) input.value = palette[key];
+                        if (input) { input.value = palette[key]; updateHexLabel(input); }
                     });
                     container.appendChild(swatch);
                 });
@@ -471,6 +489,7 @@
             elementInputs.forEach(input => {
                 input.addEventListener('input', () => {
                     document.documentElement.style.setProperty(input.dataset.cssVar, input.value);
+                    updateHexLabel(input);
                 });
             });
 
@@ -480,6 +499,7 @@
                 });
                 elementInputs.forEach(input => {
                     input.value = ORIGINAL_ELEMENT_COLORS[input.dataset.cssVar];
+                    updateHexLabel(input);
                 });
             });
         }

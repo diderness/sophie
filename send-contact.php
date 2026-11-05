@@ -4,7 +4,7 @@
 
 // ---- Einstellungen ----------------------------------------------------------
 // Empfänger der Anfragen
-$recipient = 'webmaster@trauredenbysophie.de';
+$recipient = 'kontakt@trauredenbysophie.de';
 // Absenderadresse: muss eine Adresse der eigenen Domain sein, sonst verwirft
 // Strato bzw. der Empfänger die Mail. Die Anfrage-Person steht im Reply-To,
 // damit "Antworten" direkt an sie geht.

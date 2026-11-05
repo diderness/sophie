@@ -113,11 +113,12 @@
                     <p class="text-stone-600 mb-12 max-w-2xl mx-auto">Ich freue mich darauf, von euch zu hören. Schreibt mir für ein unverbindliches Kennenlerngespräch.</p>
                 </div>
                 <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-                    <form id="contact-form" action="https://formsubmit.co/5cfdb1ba4f3d272fb248ee2b144ce70f" method="POST">
-                        <!-- Weiterleitung zur Danke-Seite -->
-                        <input type="hidden" name="_next" value="https://trauredenbysophie.de/thanks.html">
-                        <!-- Optional: Spamschutz verbessern -->
-                        <input type="hidden" name="_captcha" value="false">
+                    <form id="contact-form" action="send-contact.php" method="POST">
+                        <!-- Spamschutz: für Menschen unsichtbares Feld, Bots füllen es aus -->
+                        <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                            <label for="website">Bitte leer lassen</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
@@ -190,7 +191,7 @@
         }
 
         // Legt bei einer Formularanfrage parallel einen vorläufigen Kalendereintrag an,
-        // ohne die eigentliche Übermittlung an FormSubmit.co zu blockieren
+        // ohne die eigentliche Übermittlung per E-Mail (send-contact.php) zu blockieren
         function initTentativeCalendarBooking() {
             const form = document.getElementById('contact-form');
             form.addEventListener('submit', () => {

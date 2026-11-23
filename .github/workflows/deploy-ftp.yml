@@ -50,7 +50,11 @@ jobs:
       # Die Action merkt sich in .ftp-deploy-sync-state.json auf dem Server, was sie
       # hochgeladen hat, und löscht nur eigene Dateien. Dateien, die nur auf dem
       # Server liegen (Geschenkseite, secrets/*.json, cache/*.json), bleiben unberührt.
+      # Node bricht den IPv4-Verbindungsaufbau sonst nach 250 ms ab, wenn IPv6 auf dem
+      # Runner nicht erreichbar ist (ETIMEDOUT ... :21). Darum nur IPv4, normaler Timeout.
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        env:
+          NODE_OPTIONS: --no-network-family-autoselection --dns-result-order=ipv4first
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}

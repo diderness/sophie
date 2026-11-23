@@ -43,6 +43,10 @@ versions() {
 
 echo "Verbindung prüfen …"
 lf <<< "cls -1 . >/dev/null"
+if [ "$TESTLAUF" = "true" ]; then
+  echo "Inhalt des Zielordners auf dem Server:"
+  lf <<< "cls -1 -F ."
+fi
 
 stamp="$(TZ=Europe/Berlin date +%Y-%m-%d_%H-%M-%S)"
 

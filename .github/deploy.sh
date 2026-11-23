@@ -9,7 +9,7 @@
 #
 # Umgebung: AKTION (hochladen|zurückschalten), STARTSEITE (alt…|neu…), VERSION (optional),
 # TESTLAUF (true|false), SFTP_HOST, SFTP_PORT (optional), SFTP_USER, LFTP_PASSWORD,
-# SERVER_DIR (optional, Standard: Hauptordner).
+# SERVER_DIR (Ordner der Website auf dem Webspace).
 set -euo pipefail
 export LC_ALL=C
 
@@ -90,6 +90,12 @@ comm -12 "$work/neu.txt" "$work/server.txt" > "$work/sichern.txt"
 
 echo "Wird vorher nach $BACKUP_DIR/$stamp gesichert:"
 cat "$work/sichern.txt"
+
+# Schutz vor einem falschen Zielordner: Dort muss schon eine Website liegen.
+if ! grep -qx 'index.html' "$work/server.txt"; then
+  echo "::error::Im Zielordner \"$dir\" liegt keine index.html. Falscher Ordner? Abbruch, nichts wurde geändert."
+  exit 1
+fi
 
 if [ -s "$work/sichern.txt" ]; then
   while IFS= read -r f; do

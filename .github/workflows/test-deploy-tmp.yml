@@ -1,0 +1,62 @@
+name: TEMP Deploy-Skript testen
+on:
+  push:
+    branches: [claude/project-thread-bvxsiz]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lokalen SFTP-Server aufsetzen
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp openssh-server >/dev/null
+          sudo useradd -m tester
+          echo 'tester:Pa$$,w:ort' | sudo chpasswd
+          printf 'Port 2222\nPasswordAuthentication yes\nKbdInteractiveAuthentication yes\nUsePAM yes\nSubsystem sftp internal-sftp\nHostKey /etc/ssh/ssh_host_ed25519_key\n' | sudo tee /tmp/sshd_test >/dev/null
+          sudo mkdir -p /run/sshd && sudo ssh-keygen -A >/dev/null
+          sudo /usr/sbin/sshd -f /tmp/sshd_test
+          W=/home/tester
+          sudo -u tester bash -c "cd $W && echo LIVE-ALT > index.html && mkdir -p g-fqsscyn21amkybc5 secrets pics && echo GESCHENK > g-fqsscyn21amkybc5/index.html && echo KEY > secrets/key.json && echo BILDALT > pics/portrait_sophie.jpeg"
+      - name: Szenarien
+        env:
+          SFTP_HOST: localhost
+          SFTP_PORT: "2222"
+          SFTP_USER: tester
+          LFTP_PASSWORD: 'Pa$$,w:ort'
+          SERVER_DIR: .
+        run: |
+          W=/home/tester
+          s() { sudo cat "$W/$1"; }
+          fail() { echo "FEHLER: $*"; exit 1; }
+          echo "### 1 Testlauf"
+          AKTION=hochladen STARTSEITE=alt TESTLAUF=true .github/deploy.sh
+          [ "$(s index.html)" = LIVE-ALT ] || fail testlauf hat index geändert
+          sudo test ! -e $W/_versionen || fail testlauf hat gesichert
+          rm -rf _work
+          echo "### 2 Upload alt"
+          AKTION=hochladen STARTSEITE=alt TESTLAUF=false .github/deploy.sh
+          cmp <(s index.html) index_old.html || fail index nicht index_old
+          sudo test ! -e $W/trauerreden.html || fail trauerreden hochgeladen
+          [ "$(s g-fqsscyn21amkybc5/index.html)" = GESCHENK ] || fail geschenk
+          [ "$(s secrets/key.json)" = KEY ] || fail key
+          v1=$(sudo ls $W/_versionen | grep -v htaccess | head -1); echo "v1=$v1"
+          [ "$(s _versionen/$v1/index.html)" = LIVE-ALT ] || fail backup index
+          [ "$(s _versionen/$v1/pics/portrait_sophie.jpeg)" = BILDALT ] || fail backup bild
+          sudo test ! -e $W/_versionen/$v1/impressum.html || fail backup enthaelt neue datei
+          [ "$(s _versionen/.htaccess)" = "Require all denied" ] || fail htaccess
+          rm -rf _work; sleep 1
+          echo "### 3 Upload neu"
+          AKTION=hochladen STARTSEITE=neu TESTLAUF=false .github/deploy.sh
+          cmp <(s index.html) index.html || fail index nicht neu
+          rm -rf _work; sleep 1
+          echo "### 4 Zurückschalten (letzte)"
+          AKTION="zurückschalten auf gesicherte Version" STARTSEITE=alt TESTLAUF=false .github/deploy.sh
+          cmp <(s index.html) index_old.html || fail restore nicht auf alt-upload
+          rm -rf _work; sleep 1
+          echo "### 5 Zurückschalten auf v1"
+          AKTION="zurückschalten auf gesicherte Version" VERSION="$v1" STARTSEITE=alt TESTLAUF=false .github/deploy.sh
+          [ "$(s index.html)" = LIVE-ALT ] || fail restore v1
+          [ "$(s pics/portrait_sophie.jpeg)" = BILDALT ] || fail restore bild
+          [ "$(s g-fqsscyn21amkybc5/index.html)" = GESCHENK ] || fail geschenk am ende
+          sudo ls -R $W/_versionen | head -40
+          echo ALLE-TESTS-OK

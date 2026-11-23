@@ -2,21 +2,34 @@ name: Deploy auf Strato (SFTP)
 
 # Lädt die Website per SFTP auf den Strato-Webspace. Startet nur per Knopfdruck:
 # GitHub → Actions → "Deploy auf Strato (SFTP)" → "Run workflow".
+# Vor jedem Upload wird gesichert, was überschrieben wird (Ordner _versionen/ auf dem
+# Server). Mit "zurückschalten" wird eine gesicherte Version wieder live gestellt.
 # Zugangsdaten kommen aus den Repo-Secrets FTP_SERVER, FTP_USERNAME, FTP_PASSWORD.
 # Optional: Repo-Variable FTP_SERVER_DIR, falls die Website auf dem Webspace in
 # einem Unterordner liegt (z. B. "trauredenbysophie/"), sonst der Hauptordner.
 on:
   workflow_dispatch:
     inputs:
+      aktion:
+        description: "Was soll passieren?"
+        type: choice
+        options:
+          - "hochladen"
+          - "zurückschalten auf gesicherte Version"
+        default: "hochladen"
       startseite:
-        description: "Welche Version hochladen?"
+        description: "Beim Hochladen: welche Version?"
         type: choice
         options:
           - "alt: index_old.html als Startseite, ohne Trauerreden- und Kontaktseite"
           - "neu: index.html mit Trauerreden- und Kontaktseite"
         default: "alt: index_old.html als Startseite, ohne Trauerreden- und Kontaktseite"
+      version:
+        description: "Beim Zurückschalten: Name der Version (leer = die vor dem letzten Upload)"
+        type: string
+        default: ""
       testlauf:
-        description: "Nur anzeigen, was hochgeladen würde (nichts ändern)"
+        description: "Nur anzeigen, was passieren würde (nichts ändern)"
         type: boolean
         default: false
 
@@ -30,40 +43,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Upload-Ordner zusammenstellen
-        env:
-          STARTSEITE: ${{ inputs.startseite }}
-        run: |
-          mkdir _deploy
-          git archive HEAD | tar -x -C _deploy
-          cd _deploy
-          rm -rf .github .gitignore
-          if [[ "$STARTSEITE" == alt* ]]; then
-            mv index_old.html index.html
-            rm -f trauerreden.html kontakt.html
-          else
-            rm -f index_old.html
-          fi
-          echo "Wird hochgeladen:"
-          find . -type f | sort
+      - name: lftp installieren
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp >/dev/null
 
-      # Upload per SFTP mit lftp. "mirror -R" ohne --delete lädt nur hoch und löscht
-      # nie etwas auf dem Server. Dateien, die nur dort liegen (Geschenkseite,
-      # secrets/*.json, cache/*.json), bleiben also unberührt.
-      - name: Per SFTP hochladen
+      - name: Sichern und hochladen
         env:
+          AKTION: ${{ inputs.aktion }}
+          STARTSEITE: ${{ inputs.startseite }}
+          VERSION: ${{ inputs.version }}
+          TESTLAUF: ${{ inputs.testlauf }}
           SFTP_HOST: ${{ secrets.FTP_SERVER }}
           SFTP_USER: ${{ secrets.FTP_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '.' }}
-          TESTLAUF: ${{ inputs.testlauf }}
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq lftp >/dev/null
-          host="${SFTP_HOST#*://}"; host="${host%/}"
-          dry=""; [ "$TESTLAUF" = "true" ] && dry="--dry-run"
-          lftp --env-password -u "$SFTP_USER" "sftp://$host" <<LFTP
-          set sftp:auto-confirm yes
-          set net:timeout 30
-          set net:max-retries 2
-          mirror -R --verbose $dry --parallel=4 --exclude-glob .git* ./_deploy/ "$SERVER_DIR"
-          LFTP
+        run: .github/deploy.sh

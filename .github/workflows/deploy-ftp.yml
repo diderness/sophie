@@ -5,8 +5,8 @@ name: Deploy auf Strato (SFTP)
 # Vor jedem Upload wird gesichert, was überschrieben wird (Ordner _versionen/ auf dem
 # Server). Mit "zurückschalten" wird eine gesicherte Version wieder live gestellt.
 # Zugangsdaten kommen aus den Repo-Secrets FTP_SERVER, FTP_USERNAME, FTP_PASSWORD.
-# Optional: Repo-Variable FTP_SERVER_DIR, falls die Website auf dem Webspace in
-# einem Unterordner liegt (z. B. "trauredenbysophie/"), sonst der Hauptordner.
+# Die Website liegt auf dem Webspace im Ordner "trauredenbysophie"; abweichend
+# lässt sich das mit der Repo-Variable FTP_SERVER_DIR ändern.
 on:
   workflow_dispatch:
     inputs:
@@ -55,5 +55,5 @@ jobs:
           SFTP_HOST: ${{ secrets.FTP_SERVER }}
           SFTP_USER: ${{ secrets.FTP_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          SERVER_DIR: ${{ vars.FTP_SERVER_DIR || '.' }}
+          SERVER_DIR: ${{ vars.FTP_SERVER_DIR || 'trauredenbysophie' }}
         run: .github/deploy.sh

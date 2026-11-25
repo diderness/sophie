@@ -92,6 +92,37 @@
             scroll-behavior: smooth;
         }
         /* Fade-in Animation beim Scrollen */
+        /* Galerie als überlappende Foto-Collage */
+        .gallery-collage {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1rem 0 2rem;
+        }
+        .gallery-collage .gallery-item {
+            width: 52%;
+            border: 6px solid #fff;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .gallery-collage .gallery-item:nth-child(1) { transform: rotate(-4deg); z-index: 2; margin-right: -4%; }
+        .gallery-collage .gallery-item:nth-child(2) { transform: rotate(3deg) translateY(1.5rem); z-index: 1; }
+        .gallery-collage .gallery-item:nth-child(3) { transform: rotate(2deg); z-index: 3; margin-right: -4%; margin-top: -2.5rem; }
+        .gallery-collage .gallery-item:nth-child(4) { transform: rotate(-3deg) translateY(1rem); z-index: 4; margin-top: -2.5rem; }
+        @media (min-width: 1024px) {
+            .gallery-collage { flex-wrap: nowrap; padding: 2rem 0 3rem; }
+            .gallery-collage .gallery-item { width: 27%; margin-top: 0 !important; margin-right: 0 !important; }
+            .gallery-collage .gallery-item + .gallery-item { margin-left: -3.5%; }
+            .gallery-collage .gallery-item:nth-child(1) { transform: rotate(-4deg) translateY(1rem); }
+            .gallery-collage .gallery-item:nth-child(2) { transform: rotate(3deg) translateY(-1rem); }
+            .gallery-collage .gallery-item:nth-child(3) { transform: rotate(-2deg) translateY(1.5rem); }
+            .gallery-collage .gallery-item:nth-child(4) { transform: rotate(4deg) translateY(-0.5rem); }
+        }
+        .gallery-collage .gallery-item:hover,
+        .gallery-collage .gallery-item:focus-visible {
+            transform: rotate(0deg) scale(1.06);
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        }
         .fade-in-section {
             opacity: 0;
             transform: translateY(20px);
@@ -288,18 +319,18 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-semibold text-stone-800 mb-4">Einblicke</h2>
                 <p class="text-stone-600 mb-12 max-w-2xl mx-auto">Ein paar Momente aus Zeremonien, die ich begleiten durfte.</p>
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
-                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_wiese.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese">
-                        <img src="pics/galerie/zeremonie_wiese_klein.jpg" alt="Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                <div class="gallery-collage max-w-6xl mx-auto">
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-xl bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_wiese.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese">
+                        <img src="pics/galerie/zeremonie_wiese_klein.jpg" alt="Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese" loading="lazy" class="absolute inset-0 w-full h-full object-cover ">
                     </button>
-                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_blaues_kleid.jpg" aria-label="Bild vergrößern: Sophie spricht am Rednerpult bei einer Trauung im Freien">
-                        <img src="pics/galerie/rede_blaues_kleid_klein.jpg" alt="Sophie spricht am Rednerpult bei einer Trauung im Freien" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-xl bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_blaues_kleid.jpg" aria-label="Bild vergrößern: Sophie spricht am Rednerpult bei einer Trauung im Freien">
+                        <img src="pics/galerie/rede_blaues_kleid_klein.jpg" alt="Sophie spricht am Rednerpult bei einer Trauung im Freien" loading="lazy" class="absolute inset-0 w-full h-full object-cover ">
                     </button>
-                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_fenster.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede vor einem großen Fenster">
-                        <img src="pics/galerie/rede_fenster_klein.jpg" alt="Sophie hält eine Traurede vor einem großen Fenster" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-xl bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_fenster.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede vor einem großen Fenster">
+                        <img src="pics/galerie/rede_fenster_klein.jpg" alt="Sophie hält eine Traurede vor einem großen Fenster" loading="lazy" class="absolute inset-0 w-full h-full object-cover ">
                     </button>
-                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_weit.jpg" aria-label="Bild vergrößern: Freie Trauung im Grünen mit Gästen und Traubogen">
-                        <img src="pics/galerie/zeremonie_weit_klein.jpg" alt="Freie Trauung im Grünen mit Gästen und Traubogen" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-xl bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_weit.jpg" aria-label="Bild vergrößern: Freie Trauung im Grünen mit Gästen und Traubogen">
+                        <img src="pics/galerie/zeremonie_weit_klein.jpg" alt="Freie Trauung im Grünen mit Gästen und Traubogen" loading="lazy" class="absolute inset-0 w-full h-full object-cover ">
                     </button>
                 </div>
             </div>

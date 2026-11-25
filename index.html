@@ -283,6 +283,36 @@
             </div>
         </section>
 
+        <!-- Gallery Section -->
+        <section id="gallery" class="pb-24 bg-white fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-semibold text-stone-800 mb-4">Einblicke</h2>
+                <p class="text-stone-600 mb-12 max-w-2xl mx-auto">Ein paar Momente aus Zeremonien, die ich begleiten durfte.</p>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto">
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_wiese.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese">
+                        <img src="pics/galerie/zeremonie_wiese_klein.jpg" alt="Sophie hält eine Traurede bei einer freien Trauung auf einer Wiese" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    </button>
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_blaues_kleid.jpg" aria-label="Bild vergrößern: Sophie spricht am Rednerpult bei einer Trauung im Freien">
+                        <img src="pics/galerie/rede_blaues_kleid_klein.jpg" alt="Sophie spricht am Rednerpult bei einer Trauung im Freien" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    </button>
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/rede_fenster.jpg" aria-label="Bild vergrößern: Sophie hält eine Traurede vor einem großen Fenster">
+                        <img src="pics/galerie/rede_fenster_klein.jpg" alt="Sophie hält eine Traurede vor einem großen Fenster" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    </button>
+                    <button type="button" class="gallery-item group relative aspect-[4/5] overflow-hidden rounded-lg shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-beige-dark" data-full="pics/galerie/zeremonie_weit.jpg" aria-label="Bild vergrößern: Freie Trauung im Grünen mit Gästen und Traubogen">
+                        <img src="pics/galerie/zeremonie_weit_klein.jpg" alt="Freie Trauung im Grünen mit Gästen und Traubogen" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition duration-500 ease-in-out group-hover:scale-105">
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lightbox für die Galerie -->
+        <div id="gallery-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-stone-900/90 p-4" role="dialog" aria-modal="true" aria-label="Bildansicht">
+            <button type="button" id="lightbox-close" aria-label="Schließen" class="absolute top-4 right-4 text-white/80 hover:text-white p-2"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <button type="button" id="lightbox-prev" aria-label="Vorheriges Bild" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2"><i data-lucide="chevron-left" class="w-10 h-10"></i></button>
+            <img id="lightbox-image" src="" alt="" class="max-h-[85vh] max-w-full rounded-lg shadow-2xl object-contain">
+            <button type="button" id="lightbox-next" aria-label="Nächstes Bild" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2"><i data-lucide="chevron-right" class="w-10 h-10"></i></button>
+        </div>
+
         <!-- Process Section -->
         <section id="process" class="py-24 bg-beige-light fade-in-section">
             <div class="container mx-auto px-6 text-center">
@@ -527,10 +557,46 @@
             });
         }
 
+        function initGallery() {
+            const items = Array.from(document.querySelectorAll('.gallery-item'));
+            const box = document.getElementById('gallery-lightbox');
+            const img = document.getElementById('lightbox-image');
+            if (!items.length || !box) return;
+            let current = 0;
+            const show = (i) => {
+                current = (i + items.length) % items.length;
+                img.src = items[current].dataset.full;
+                img.alt = items[current].querySelector('img').alt;
+            };
+            const open = (i) => {
+                show(i);
+                box.classList.remove('hidden');
+                box.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            };
+            const close = () => {
+                box.classList.add('hidden');
+                box.classList.remove('flex');
+                document.body.style.overflow = '';
+            };
+            items.forEach((item, i) => item.addEventListener('click', () => open(i)));
+            document.getElementById('lightbox-close').addEventListener('click', close);
+            document.getElementById('lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); show(current - 1); });
+            document.getElementById('lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); show(current + 1); });
+            box.addEventListener('click', (e) => { if (e.target === box) close(); });
+            document.addEventListener('keydown', (e) => {
+                if (box.classList.contains('hidden')) return;
+                if (e.key === 'Escape') close();
+                if (e.key === 'ArrowLeft') show(current - 1);
+                if (e.key === 'ArrowRight') show(current + 1);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             populateContent();
             lucide.createIcons();
             initAboutAudioPlayer();
+            initGallery();
 
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');

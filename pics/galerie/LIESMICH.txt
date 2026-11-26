@@ -1,0 +1,16 @@
+Bildergalerie der Startseite ("Einblicke")
+==========================================
+
+Die Galerie zeigt immer diese vier Dateien, von links nach rechts:
+
+  bild1.jpg  bild2.jpg  bild3.jpg  bild4.jpg
+
+Bild austauschen: neues Foto genau so benennen (z. B. bild2.jpg) und die alte
+Datei in diesem Ordner damit überschreiben. Am HTML muss nichts geändert werden.
+
+Tipps:
+- Format JPG, Dateiname klein geschrieben mit .jpg (nicht .jpeg/.JPG).
+- Hochformat passt am besten; Querformat wird mittig zugeschnitten.
+- Vorher verkleinern (ca. 1800 px an der langen Seite, unter 500 KB),
+  damit die Seite schnell lädt.
+- Falls der Browser noch das alte Bild zeigt: Seite neu laden (Strg+F5).
